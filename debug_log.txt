@@ -1,0 +1,4 @@
+FLASK API PROVIDERS: got 3 providers
+  pollinations - Pollinations (FLUX) - Available: True
+  pollinations-classic - Pollinations (Classic/Anonymous) - Available: True
+  stability - Stability AI (SD3) - Available: True

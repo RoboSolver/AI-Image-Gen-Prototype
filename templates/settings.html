@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - AI Image Generator</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body data-theme="{{ settings.theme or 'dark' }}">
+    <header class="header">
+        <div class="header-content">
+            <h1 class="logo">🎨 AI Image Generator</h1>
+            <nav class="nav">
+                <a href="/" class="nav-link">Generate</a>
+                <a href="/history" class="nav-link">History</a>
+                <a href="/settings" class="nav-link active">Settings</a>
+            </nav>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <span class="theme-icon sun">☀️</span>
+                <span class="theme-icon moon">🌙</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="main">
+        <section class="settings-section">
+            <h2>Settings</h2>
+            
+            <div class="settings-card">
+                <h3>API Keys</h3>
+                <div class="setting-row">
+                    <label for="pollinationsKey">Pollinations API Key</label>
+                    <div class="key-input-wrapper">
+                        <input type="password" id="pollinationsKey" class="option-input" placeholder="sk_..." autocomplete="off">
+                        <button type="button" class="btn btn-small toggle-visibility" data-target="pollinationsKey">👁️</button>
+                    </div>
+                    <p class="setting-hint">Get a key from <a href="https://enter.pollinations.ai" target="_blank">enter.pollinations.ai</a> for higher limits and no logo. Optional for basic use.</p>
+                </div>
+                <div class="setting-row">
+                    <label for="stabilityKey">Stability AI API Key</label>
+                    <div class="key-input-wrapper">
+                        <input type="password" id="stabilityKey" class="option-input" placeholder="sk_..." autocomplete="off">
+                        <button type="button" class="btn btn-small toggle-visibility" data-target="stabilityKey">👁️</button>
+                    </div>
+                    <p class="setting-hint">Get a key from <a href="https://platform.stability.ai" target="_blank">platform.stability.ai</a> (25 free credits on signup).</p>
+                </div>
+            </div>
+
+            <div class="settings-card">
+                <h3>Default Generation Settings</h3>
+                <div class="settings-grid">
+                    <div class="setting-row">
+                        <label for="defProvider">Default Provider</label>
+                        <select id="defProvider" class="option-select">
+                            <option value="pollinations" {% if settings.default_provider == 'pollinations' %}selected{% endif %}>Pollinations (FLUX) - Key</option>
+                            <option value="pollinations-classic" {% if settings.default_provider == 'pollinations-classic' %}selected{% endif %}>Pollinations (Classic) - No Key</option>
+                            <option value="stability" {% if settings.default_provider == 'stability' %}selected{% endif %}>Stability AI (SD3)</option>
+                            <option value="auto">Auto</option>
+                        </select>
+                    </div>
+                    <div class="setting-row">
+                        <label for="defAspect">Default Aspect Ratio</label>
+                        <select id="defAspect" class="option-select">
+                            <option value="1:1" {% if settings.default_aspect_ratio == '1:1' %}selected{% endif %}>1:1 Square</option>
+                            <option value="16:9" {% if settings.default_aspect_ratio == '16:9' %}selected{% endif %}>16:9</option>
+                            <option value="9:16" {% if settings.default_aspect_ratio == '9:16' %}selected{% endif %}>9:16</option>
+                            <option value="4:3" {% if settings.default_aspect_ratio == '4:3' %}selected{% endif %}>4:3</option>
+                            <option value="3:4" {% if settings.default_aspect_ratio == '3:4' %}selected{% endif %}>3:4</option>
+                        </select>
+                    </div>
+                    <div class="setting-row">
+                        <label for="defStyle">Default Style</label>
+                        <select id="defStyle" class="option-select">
+                            <option value="realistic" {% if settings.default_style == 'realistic' %}selected{% endif %}>Realistic</option>
+                            <option value="cartoon" {% if settings.default_style == 'cartoon' %}selected{% endif %}>Cartoon</option>
+                            <option value="anime" {% if settings.default_style == 'anime' %}selected{% endif %}>Anime</option>
+                            <option value="pixel" {% if settings.default_style == 'pixel' %}selected{% endif %}>Pixel Art</option>
+                            <option value="oil" {% if settings.default_style == 'oil' %}selected{% endif %}>Oil Painting</option>
+                            <option value="watercolor" {% if settings.default_style == 'watercolor' %}selected{% endif %}>Watercolor</option>
+                            <option value="sketch" {% if settings.default_style == 'sketch' %}selected{% endif %}>Sketch</option>
+                            <option value="3d" {% if settings.default_style == '3d' %}selected{% endif %}>3D Render</option>
+                        </select>
+                    </div>
+                    <div class="setting-row">
+                        <label for="defResolution">Default Resolution</label>
+                        <select id="defResolution" class="option-select">
+                            <option value="512x512" {% if settings.default_resolution == '512x512' %}selected{% endif %}>512×512</option>
+                            <option value="768x768" {% if settings.default_resolution == '768x768' %}selected{% endif %}>768×768</option>
+                            <option value="1024x1024" {% if settings.default_resolution == '1024x1024' %}selected{% endif %}>1024×1024</option>
+                            <option value="1280x720" {% if settings.default_resolution == '1280x720' %}selected{% endif %}>1280×720</option>
+                            <option value="1920x1080" {% if settings.default_resolution == '1920x1080' %}selected{% endif %}>1920×1080</option>
+                        </select>
+                    </div>
+                    <div class="setting-row">
+                        <label for="defNumImages">Default Images</label>
+                        <input type="number" id="defNumImages" class="option-input" min="1" max="9" value="{{ settings.default_num_images or 1 }}">
+                    </div>
+                    <div class="setting-row">
+                        <label for="autoProvider">Auto Fallback</label>
+                        <label class="toggle">
+                            <input type="checkbox" id="autoProvider" {% if settings.auto_provider %}checked{% endif %}>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-card">
+                <h3>Appearance</h3>
+                <div class="settings-grid">
+                    <div class="setting-row">
+                        <label for="theme">Theme</label>
+                        <select id="theme" class="option-select">
+                            <option value="dark" {% if settings.theme == 'dark' %}selected{% endif %}>Dark</option>
+                            <option value="light" {% if settings.theme == 'light' %}selected{% endif %}>Light</option>
+                            <option value="auto" {% if settings.theme == 'auto' %}selected{% endif %}>System</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-card">
+                <h3>Storage</h3>
+                <div id="storageInfo" class="storage-info">Loading...</div>
+                <div class="setting-row">
+                    <button id="cleanupBtn" class="btn btn-secondary">Cleanup Old Images (30+ days)</button>
+                </div>
+            </div>
+
+            <div class="settings-actions">
+                <button id="saveSettings" class="btn btn-primary">Save Settings</button>
+                <button id="testProvider" class="btn btn-secondary">Test Provider</button>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>Local AI Image Generator</p>
+    </footer>
+
+    <script src="/static/js/settings.js"></script>
+</body>
+</html>

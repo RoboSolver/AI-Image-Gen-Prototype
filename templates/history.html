@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History - AI Image Generator</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body data-theme="{{ settings.theme or 'dark' }}">
+    <header class="header">
+        <div class="header-content">
+            <h1 class="logo">🎨 AI Image Generator</h1>
+            <nav class="nav">
+                <a href="/" class="nav-link">Generate</a>
+                <a href="/history" class="nav-link active">History</a>
+                <a href="/settings" class="nav-link">Settings</a>
+            </nav>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <span class="theme-icon sun">☀️</span>
+                <span class="theme-icon moon">🌙</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="main">
+        <section class="history-section">
+            <div class="history-header">
+                <h2>Generation History</h2>
+                <div class="history-actions">
+                    <button id="clearHistory" class="btn btn-danger">Clear All History</button>
+                </div>
+            </div>
+            <div id="historyList" class="history-list"></div>
+            <div id="historyEmpty" class="empty-state" style="display:none;">
+                <p>No generation history yet.</p>
+            </div>
+            <div id="historyLoading" class="loading">Loading history...</div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>Local AI Image Generator</p>
+    </footer>
+
+    <script src="/static/js/gallery.js"></script>
+</body>
+</html>

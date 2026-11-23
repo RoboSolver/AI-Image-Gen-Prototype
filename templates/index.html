@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local AI Image Generator</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body data-theme="{{ settings.theme or 'dark' }}">
+    <header class="header">
+        <div class="header-content">
+            <h1 class="logo">🎨 AI Image Generator</h1>
+            <nav class="nav">
+                <a href="/" class="nav-link active">Generate</a>
+                <a href="/history" class="nav-link">History</a>
+                <a href="/settings" class="nav-link">Settings</a>
+            </nav>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <span class="theme-icon sun">☀️</span>
+                <span class="theme-icon moon">🌙</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="main">
+        <section class="generator-section">
+            <div class="generator-card">
+                <div class="prompt-area">
+                    <label for="prompt" class="prompt-label">Describe your image</label>
+                    <textarea 
+                        id="prompt" 
+                        class="prompt-input" 
+                        placeholder="A majestic lion in a cyberpunk city, neon lights, rain, photorealistic, 8k..."
+                        rows="4"
+                    ></textarea>
+                    <div class="prompt-hint">Press Ctrl+Enter to generate</div>
+                </div>
+
+                <div class="options-grid">
+                    <div class="option-group">
+                        <label for="numImages">Images</label>
+                        <input type="number" id="numImages" class="option-input" min="1" max="9" value="{{ settings.default_num_images or 1 }}">
+                    </div>
+                    <div class="option-group">
+                        <label for="aspectRatio">Aspect Ratio</label>
+                        <select id="aspectRatio" class="option-select">
+                            <option value="1:1" {% if settings.default_aspect_ratio == '1:1' %}selected{% endif %}>1:1 Square</option>
+                            <option value="16:9" {% if settings.default_aspect_ratio == '16:9' %}selected{% endif %}>16:9 Landscape</option>
+                            <option value="9:16" {% if settings.default_aspect_ratio == '9:16' %}selected{% endif %}>9:16 Portrait</option>
+                            <option value="4:3" {% if settings.default_aspect_ratio == '4:3' %}selected{% endif %}>4:3</option>
+                            <option value="3:4" {% if settings.default_aspect_ratio == '3:4' %}selected{% endif %}>3:4</option>
+                            <option value="21:9" {% if settings.default_aspect_ratio == '21:9' %}selected{% endif %}>21:9 Ultrawide</option>
+                        </select>
+                    </div>
+                    <div class="option-group">
+                        <label for="style">Style</label>
+                        <select id="style" class="option-select">
+                            <option value="realistic" {% if settings.default_style == 'realistic' %}selected{% endif %}>📸 Realistic</option>
+                            <option value="cartoon" {% if settings.default_style == 'cartoon' %}selected{% endif %}>🎨 Cartoon</option>
+                            <option value="anime" {% if settings.default_style == 'anime' %}selected{% endif %}>🌸 Anime</option>
+                            <option value="pixel" {% if settings.default_style == 'pixel' %}selected{% endif %}>🎮 Pixel Art</option>
+                            <option value="oil" {% if settings.default_style == 'oil' %}selected{% endif %}>🖼️ Oil Painting</option>
+                            <option value="watercolor" {% if settings.default_style == 'watercolor' %}selected{% endif %}>🎨 Watercolor</option>
+                            <option value="sketch" {% if settings.default_style == 'sketch' %}selected{% endif %}>✏️ Sketch</option>
+                            <option value="3d" {% if settings.default_style == '3d' %}selected{% endif %}>🎮 3D Render</option>
+                        </select>
+                    </div>
+                    <div class="option-group">
+                        <label for="resolution">Resolution</label>
+                        <select id="resolution" class="option-select">
+                            <option value="512x512">512×512 (Fast)</option>
+                            <option value="768x768">768×768</option>
+                            <option value="1024x1024" {% if settings.default_resolution == '1024x1024' %}selected{% endif %}>1024×1024 (Default)</option>
+                            <option value="1280x720">1280×720 (HD)</option>
+                            <option value="1920x1080">1920×1080 (Full HD)</option>
+                        </select>
+                    </div>
+                    <div class="option-group">
+                        <label for="provider">Provider</label>
+                        <select id="provider" class="option-select">
+                            <option value="auto">🔄 Auto (with fallback)</option>
+                            <option value="pollinations">Pollinations (FLUX) - Key</option>
+                            <option value="pollinations-classic">Pollinations (Classic) - No Key</option>
+                            <option value="stability">Stability AI (SD3)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="generate-area">
+                    <div class="generate-btn-row">
+                        <button id="generateBtn" class="btn btn-primary btn-large" disabled style="flex: 1;">
+                            <span class="btn-text">Generate Images</span>
+                            <span class="btn-loading" style="display:none;">
+                                <span class="spinner"></span> Generating...
+                            </span>
+                        </button>
+                        <button id="randomPromptBtn" class="btn btn-secondary btn-large" style="flex: 1;" title="Generate random prompt">
+                            🎲 Random Prompt
+                        </button>
+                    </div>
+                    <div id="status" class="status"></div>
+                </div>
+            </div>
+
+            <div class="gallery-section">
+                <div class="gallery-header">
+                    <h2>Generated Images</h2>
+                    <div class="gallery-actions">
+                        <button id="clearGallery" class="btn btn-secondary btn-small">Clear Gallery</button>
+                    </div>
+                </div>
+                <div id="gallery" class="gallery"></div>
+                <div id="emptyState" class="empty-state">
+                    <p>No images generated yet. Enter a prompt and click Generate!</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>Local AI Image Generator • Powered by Pollinations</p>
+    </footer>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
